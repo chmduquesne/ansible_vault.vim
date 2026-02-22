@@ -1,19 +1,33 @@
 # ansible-vault.vim
 
-Edit ansible-vault files with vim transparently.
+Edit ansible-vault files with vim transparently
 
 ## Features
 
 This plugin allows you to edit ansible-vault files with vim. It works by
 installing autocommands to intercept reading and writing ansible-vault
-files. It essentially works similarly to the gzip plugin, except with
-ansible-vault commands instead of gzip to load/save the files.
+files. It mimics the behavior of the standard gzip plugin, except with
+encryption instead of compression.
 
 ## Installation
 
-Use your favourite vim package manager to download this repo.
+Use your favourite vim package manager.
 
-    'chmduquesne/ansible-vault.vim'
+With Vundle:
+
+    Plugin 'chmduquesne/ansible-vault.vim'
+
+With Vim-Plug:
+
+    Plug 'chmduquesne/ansible-vault.vim'
+
+With Packer.nvim:
+
+    use 'chmduquesne/ansible-vault.vim'
+
+Or old school: just copy the file
+[plugin/ansible-vault.vim](plugin/ansible-vault.vim) in your
+`~/.vim/plugin` directory.
 
 ## Configuration
 

@@ -34,3 +34,29 @@ Or old school: just copy the file
 | Variable                | Default        | Meaning                                 |
 | :---                    | :---           | :---                                    |
 | g:ansible_vault_pattern | `'*vault.yml'` | Files identified as ansible vault files |
+
+## Usage
+
+Open a new vault file with vim
+
+    $ vim vault.yml # Matches the pattern of g:ansible_vault_pattern
+
+Edit the content, save and exit
+
+    ---
+    myvariable: myvalue
+
+Upon saving the file, vim invokes ansible-vault. Now vault.yml is encrypted
+
+    $ cat vault.yml
+    $ANSIBLE_VAULT;1.1;AES256
+    32653732386138643030356132666335653232393663336334626636623638613137393035636166
+    6431353436653063643633336661373735633838343363360a363234653331633330633932633363
+    36343765633336623636326637393037323639316436646333616366373135326464326137363231
+    3332353166336635310a366365353635653530636164343432643363643065343830353838666635
+    36393362313266376665333433363436613831396161303462383263636661363430
+
+If you open the same vault file with vim again, you see the decrypted content
+
+    ---
+    myvariable: myvalue

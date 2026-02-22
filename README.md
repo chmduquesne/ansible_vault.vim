@@ -25,9 +25,10 @@ With Packer.nvim:
 
     use 'chmduquesne/ansible_vault.vim'
 
-Or old school: just copy the file
-[plugin/ansible_vault.vim](plugin/ansible_vault.vim) in your
-`~/.vim/plugin` directory.
+Old school style: copy
+[plugin/ansible_vault.vim](plugin/ansible_vault.vim) in `~/.vim/plugin`,
+and [autoload/ansible_vault.vim](autoload/ansible_vault.vim) in
+`.vim/autoload`
 
 ## Configuration
 

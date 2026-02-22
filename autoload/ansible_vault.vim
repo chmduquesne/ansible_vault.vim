@@ -1,4 +1,4 @@
-" Vim autoload file for editing ansible-vault encrypted files.
+" Vim autoload file for editing Ansible vault encrypted files.
 " These functions are used by the ansible_vault plugin
 
 " Open the file with ansible-vault
@@ -27,8 +27,8 @@ function ansible_vault#read()
     echo "Vault decrypted."
 endfunction
 
-" Write with ansible-vault. Do not re-encrypt if the content has not
-" changed.
+" Write the file with ansible-vault. Do not overwrite the file with a new
+" ciphertext if the content has not changed.
 function ansible_vault#write()
     let l:fname = expand('%:p')
 
@@ -42,7 +42,7 @@ function ansible_vault#write()
 
     if l:disk_hash == l:buffer_hash
         setlocal nomodified
-        echo "No changes. File untouched."
+        echo "Content unchanged. Nothing was written to disk."
         return
     endif
 
@@ -58,5 +58,5 @@ function ansible_vault#write()
     endif
 
     setlocal nomodified
-    echo "Vault saved (New Salt)."
+    echo "Vault encrypted."
 endfunction

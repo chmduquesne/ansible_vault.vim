@@ -1,23 +1,8 @@
-if exists('g:loaded_ansible_vault_auto') | finish | endif
-let g:loaded_ansible_vault_auto = 1
-
-" --- Configuration ---
-" Override this if you want to this plugin to handle different patterns, e.g.
-" let g:ansible_vault_pattern = 'secrets.yml,*_vault.yml'
-if !exists('g:ansible_vault_pattern')
-    let g:ansible_vault_pattern = '*vault.yml'
-endif
-
-augroup AnsibleVault
-    autocmd!
-    " No swap file to avoid leaking secrets to the disk
-    execute 'autocmd BufReadPre ' . g:ansible_vault_pattern . ' setlocal noswapfile bin'
-    execute 'autocmd BufReadPost ' . g:ansible_vault_pattern . ' autocmd SafeState <buffer> ++once call s:VaultRead()'
-    execute 'autocmd BufWriteCmd ' . g:ansible_vault_pattern . ' call s:VaultWrite()'
-augroup END
+" Vim autoload file for editing ansible-vault encrypted files.
+" These functions are used by the ansible_vault plugin
 
 " Open the file with ansible-vault
-function! s:VaultRead()
+function ansible_vault#read()
     if getline(1) !~ '^\$ANSIBLE_VAULT'
         return
     endif
@@ -44,7 +29,7 @@ endfunction
 
 " Write with ansible-vault. Do not re-encrypt if the content has not
 " changed.
-function! s:VaultWrite()
+function ansible_vault#write()
     let l:fname = expand('%:p')
 
     " Get plaintext

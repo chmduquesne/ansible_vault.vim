@@ -1,0 +1,41 @@
+*ansible-vault.vim.txt* For Vim version 9.0.    Last change: 2026 Feb 22
+
+ansible-vault.vim
+|
+Editing ansible-vault files with vim
+
+==============================================================================
+CONTENTS                                          *ansible-vault.vim-contents*
+
+    1. Manual....................................|ansible-vault.vim-manual|
+    2. Configuration.............................|ansible-vault.vim-config|
+    3. License...................................|ansible-vault.vim-license|
+
+==============================================================================
+1. Manual                                           *ansible-vault.vim-manual*
+
+This plugin allows you to edit ansible-vault files with vim. It works by
+installing autocommands to intercept reading and writing ansible-vault files.
+
+No swap files are created, in an attempt to prevent leaking passwords to the
+disk. Before writing a file, the content is compared to the existing file in
+order to avoid creating a new ciphertext when nothing has changed.
+
+==============================================================================
+2. Configuration                                    *ansible-vault.vim-config*
+
+To customize the behavior, add this to your |vimrc|:
+
+g:ansible_vault_pattern                              *g:ansible_vault_pattern*
+    Files identified as ansible-vault files.
+    For example:
+    let: g:ansible_vault_pattern = 'secrets.yml,*vault.yml'
+    Default: '*vault.yml'
+
+==============================================================================
+3. License                                         *ansible-vault.vim-license*
+
+MIT License. See the repository for full details.
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:

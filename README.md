@@ -60,3 +60,7 @@ If you open the same vault file with vim again, you see the decrypted content
 
     ---
     myvariable: myvalue
+
+You can make changes, save them, and vim will encrypt your changes
+transparently. You can also open existing files into a buffer using
+`:edit`.

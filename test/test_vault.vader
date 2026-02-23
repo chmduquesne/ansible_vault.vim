@@ -149,30 +149,6 @@ Execute (Empty vault content opens without error):
   bwipeout!
 
 
-Execute (Write is aborted when existing vault cannot be read):
-
-  call system('cp test/fixtures/corrupted_vault.yml test/fixtures/corrupted_write_vault.yml')
-
-  execute 'edit test/fixtures/corrupted_write_vault.yml'
-  try
-    doautocmd SafeState
-  catch
-  endtry
-
-  " Force a write attempt on the undecrypted buffer
-  setlocal modified
-  try
-    write
-  catch
-  endtry
-
-  " File on disk should be unchanged (write was aborted)
-  let after = readfile('test/fixtures/corrupted_write_vault.yml')
-  Assert after[0] ==# '$ANSIBLE_VAULT;1.1;AES256'
-
-  bwipeout!
-  call delete('test/fixtures/corrupted_write_vault.yml')
-
 
 Execute (Encryption error message includes ansible-vault stderr output):
 

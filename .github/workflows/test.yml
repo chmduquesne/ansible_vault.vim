@@ -1,0 +1,15 @@
+name: Vim Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Vim
+        run: sudo apt-get install vim ansible
+
+      - name: Run tests
+        run: ./test/run.sh

@@ -15,7 +15,9 @@ endif
 
 augroup AnsibleVault
     autocmd!
+    " We implement the recommendations of
     " https://docs.ansible.com/projects/ansible/latest/vault_guide/vault_encrypting_content.html#vim
+    " However, clipboard being a global option, we leave it alone
     execute 'autocmd BufReadPre ' . g:ansible_vault_pattern . ' setlocal noswapfile nobackup nowritebackup viminfo='
     execute 'autocmd BufReadPost ' . g:ansible_vault_pattern . ' autocmd SafeState <buffer> ++once call ansible_vault#read()'
     execute 'autocmd BufWriteCmd ' . g:ansible_vault_pattern . ' call ansible_vault#write()'

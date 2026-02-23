@@ -10,8 +10,8 @@ endif
 
 augroup AnsibleVault
     autocmd!
-    " No swap file to avoid leaking secrets to the disk
-    execute 'autocmd BufReadPre ' . g:ansible_vault_pattern . ' setlocal noswapfile bin'
+    " https://docs.ansible.com/projects/ansible/latest/vault_guide/vault_encrypting_content.html#vim
+    execute 'autocmd BufReadPre ' . g:ansible_vault_pattern . ' setlocal noswapfile nobackup nowritebackup viminfo= clipboard='
     execute 'autocmd BufReadPost ' . g:ansible_vault_pattern . ' autocmd SafeState <buffer> ++once call ansible_vault#read()'
     execute 'autocmd BufWriteCmd ' . g:ansible_vault_pattern . ' call ansible_vault#write()'
 augroup END

@@ -1,5 +1,7 @@
 # ansible_vault.vim
 
+[![Vim Tests](https://github.com/chmduquesne/ansible_vault.vim/actions/workflows/test.yml/badge.svg)](https://github.com/chmduquesne/ansible_vault.vim/actions/workflows/test.yml)
+
 Edit ansible vault files with vim transparently
 
 ## Features

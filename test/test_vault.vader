@@ -2,7 +2,7 @@ Execute(Plugin loads):
   Assert exists('g:loaded_ansible_vault_auto')
 
 
-Execute(Vault file decrypts at read time):
+Execute(Vault file is decrypted on read):
 
   execute 'edit test/fixtures/vault.yml'
   " SafeState never triggers with vader, we have to trigger it manually
@@ -18,7 +18,8 @@ Execute(Vault file decrypts at read time):
 
   bwipeout!
 
-Execute (New vault file encrypts at write time):
+
+Execute (New vault file is encrypted on write):
 
   execute 'edit test/fixtures/new_vault.yml'
 
@@ -34,3 +35,85 @@ Execute (New vault file encrypts at write time):
   Assert content[0] =~ '^\$ANSIBLE_VAULT'
 
   call delete('test/fixtures/new_vault.yml')
+
+
+Execute (Modified vault file is re-encrypted on write):
+
+  call system('cp test/fixtures/vault.yml test/fixtures/modified_vault.yml')
+
+  execute 'edit test/fixtures/modified_vault.yml'
+  doautocmd SafeState
+
+  call setline(1, 'secret_key: changed_value')
+  write
+
+  bwipeout!
+
+  let decrypted = system('ansible-vault view test/fixtures/modified_vault.yml')
+  Assert decrypted =~ 'changed_value'
+
+  call delete('test/fixtures/modified_vault.yml')
+
+
+Execute (Plain YAML matching vault pattern is not decrypted):
+
+  execute 'edit test/fixtures/plain_vault.yml'
+  doautocmd SafeState
+
+  let content = readfile('test/fixtures/plain_vault.yml')
+  Assert getline(1) ==# content[0]
+
+  bwipeout!
+
+
+Execute (Security options are set for vault files):
+
+  execute 'edit test/fixtures/vault.yml'
+
+  Assert !&swapfile
+  Assert !&backup
+  Assert !&writebackup
+
+  bwipeout!
+
+
+Execute (Unchanged vault content is not re-encrypted on write):
+
+  execute 'edit test/fixtures/vault.yml'
+  doautocmd SafeState
+
+  let before = readfile('test/fixtures/vault.yml')
+  setlocal modified
+  write
+  let after = readfile('test/fixtures/vault.yml')
+
+  " ansible-vault always uses a fresh IV, so ciphertext differs on each
+  " encrypt; identical file means the write was skipped
+  Assert before ==# after
+
+  bwipeout!
+
+
+Execute (Buffer is not modified after decryption):
+
+  execute 'edit test/fixtures/vault.yml'
+  doautocmd SafeState
+
+  Assert !&modified
+
+  bwipeout!
+
+
+Execute (Custom vault pattern is used when g:ansible_vault_pattern is set):
+
+  unlet g:loaded_ansible_vault_auto
+  let g:ansible_vault_pattern = '*secrets.yml'
+  source plugin/ansible_vault.vim
+
+  Assert  exists('#AnsibleVault#BufReadPost#*secrets.yml')
+  Assert !exists('#AnsibleVault#BufReadPost#*vault.yml')
+
+  " Restore default pattern for subsequent tests
+  unlet g:loaded_ansible_vault_auto
+  unlet g:ansible_vault_pattern
+  source plugin/ansible_vault.vim

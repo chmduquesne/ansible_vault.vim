@@ -105,6 +105,30 @@ Execute (Buffer is not modified after decryption):
   bwipeout!
 
 
+Execute (Filetype is set to yaml.ansible after decryption):
+
+  execute 'edit test/fixtures/vault.yml'
+  doautocmd SafeState
+
+  Assert &filetype ==# 'yaml.ansible'
+
+  bwipeout!
+
+
+Execute (Decryption cannot be undone):
+
+  execute 'edit test/fixtures/vault.yml'
+  doautocmd SafeState
+
+  " Attempt to undo - should not revert to ciphertext
+  silent! undo
+
+  let plain_yml = readfile('test/fixtures/plain.yml')
+  Assert getline(1) ==# plain_yml[0]
+
+  bwipeout!
+
+
 Execute (Custom vault pattern is used when g:ansible_vault_pattern is set):
 
   unlet g:loaded_ansible_vault_auto

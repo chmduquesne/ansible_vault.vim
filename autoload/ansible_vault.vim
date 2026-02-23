@@ -34,7 +34,7 @@ function ansible_vault#write()
 
     " Get plaintext
     let l:buffer_plaintext = join(getline(1, '$'), "\n")
-    let l:disk_plaintext = system('ansible-vault view ' . shellescape(l:fname))
+    let l:disk_plaintext = system('ansible-vault view ' . shellescape(l:fname) . ' 2>&1')
 
     " Hash content
     let l:disk_hash = sha256(substitute(l:disk_plaintext, '\n\+$', '', ''))

@@ -171,3 +171,23 @@ Execute (Write is aborted when existing vault cannot be read):
 
   bwipeout!
   call delete('test/fixtures/corrupted_write_vault.yml')
+
+
+Execute (Encryption error message includes ansible-vault stderr output):
+
+  " A path in a non-existent directory causes ansible-vault encrypt to fail,
+  " producing output on stderr. Verify that output is included in the error.
+  execute 'edit /nonexistent/dir/error_vault.yml'
+  call setline(1, 'secret_key: value')
+
+  let caught = ''
+  try
+    write
+  catch
+    let caught = v:exception
+  endtry
+
+  Assert caught =~# 'Encryption failed', "Write should throw an encryption error"
+  Assert caught =~# 'Encryption failed: \S', "Encryption error should include stderr output"
+
+  bwipeout!

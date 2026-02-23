@@ -47,7 +47,7 @@ function ansible_vault#write()
     endif
 
     " Encrypt
-    let l:res = system('ansible-vault encrypt --output ' . shellescape(l:fname) . ' /dev/stdin', l:buffer_plaintext . "\n")
+    let l:res = system('ansible-vault encrypt --output ' . shellescape(l:fname) . ' /dev/stdin 2>&1', l:buffer_plaintext . "\n")
 
     if v:shell_error != 0
         echoerr "Encryption failed: " . l:res

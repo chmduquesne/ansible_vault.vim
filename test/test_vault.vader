@@ -117,3 +117,57 @@ Execute (Custom vault pattern is used when g:ansible_vault_pattern is set):
   unlet g:loaded_ansible_vault_auto
   unlet g:ansible_vault_pattern
   source plugin/ansible_vault.vim
+
+
+Execute (ansible-vault error message is shown when decrypt fails):
+
+  execute 'edit test/fixtures/corrupted_vault.yml'
+  try
+    doautocmd SafeState
+    Assert 0, "Expected an error to be thrown"
+  catch /Vault Decryption Failed/
+    " ansible-vault diagnostic (e.g. "[ERROR]: Vault format...") should be included
+    Assert v:exception =~ '\[ERROR\]'
+  endtry
+
+  " Buffer should still contain the original (undecrypted) content
+  let content = readfile('test/fixtures/corrupted_vault.yml')
+  Assert getline(1) ==# content[0]
+
+  bwipeout!
+
+
+Execute (Empty vault content opens without error):
+
+  execute 'edit test/fixtures/empty_vault.yml'
+  doautocmd SafeState
+
+  Assert getline(1) ==# ''
+  Assert !&modified
+
+  bwipeout!
+
+
+Execute (Write is aborted when existing vault cannot be read):
+
+  call system('cp test/fixtures/corrupted_vault.yml test/fixtures/corrupted_write_vault.yml')
+
+  execute 'edit test/fixtures/corrupted_write_vault.yml'
+  try
+    doautocmd SafeState
+  catch
+  endtry
+
+  " Force a write attempt on the undecrypted buffer
+  setlocal modified
+  try
+    write
+  catch
+  endtry
+
+  " File on disk should be unchanged (write was aborted)
+  let after = readfile('test/fixtures/corrupted_write_vault.yml')
+  Assert after[0] ==# '$ANSIBLE_VAULT;1.1;AES256'
+
+  bwipeout!
+  call delete('test/fixtures/corrupted_write_vault.yml')

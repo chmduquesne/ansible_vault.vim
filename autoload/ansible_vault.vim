@@ -8,10 +8,10 @@ function ansible_vault#read()
     endif
 
     let l:fname = expand('%:p')
-    let l:plaintext = system('ansible-vault view ' . shellescape(l:fname))
+    let l:plaintext = system('ansible-vault view ' . shellescape(l:fname) . ' 2>&1')
 
     if v:shell_error != 0 || empty(l:plaintext)
-        echoerr "Vault Decryption Failed (Exit Code " . v:shell_error . ")"
+        echoerr "Vault Decryption Failed: " . trim(l:plaintext)
         return
     endif
 

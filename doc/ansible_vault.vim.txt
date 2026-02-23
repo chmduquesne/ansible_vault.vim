@@ -17,9 +17,16 @@ CONTENTS                                          *ansible_vault.vim-contents*
 This plugin allows you to edit Ansible vault files with vim. It works by
 installing autocommands to intercept reading and writing those files.
 
-To prevent leaking secrets to the disk, swap files are deactivated. Before
-writing a file, the content is compared to the existing file in order to avoid
-creating a new ciphertext when nothing has changed.
+To prevent leaking secrets to the disk, swap files, backups, and viminfo are
+deactivated for vault buffers. This follows the recommendations from the
+official Ansible documentation:
+https://docs.ansible.com/projects/ansible/latest/vault_guide/vault_encrypting_content.html#vim
+
+The clipboard setting recommended by Ansible is intentionally not applied, as
+it is a global option that would affect all buffers and disrupt normal editing.
+
+Before writing a file, the content is compared to the existing file in order
+to avoid creating a new ciphertext when nothing has changed.
 
 ==============================================================================
 2. Configuration                                    *ansible_vault.vim-config*

@@ -9,6 +9,10 @@ installing autocommands to intercept reading and writing ansible vault
 files. It mimics the behavior of the standard gzip plugin, except with
 encryption instead of compression.
 
+## Demo
+
+https://github.com/user-attachments/assets/636441f2-4d72-46ea-987d-14895ca154ad
+
 ## Installation
 
 Use your favourite vim package manager.

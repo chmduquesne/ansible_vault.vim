@@ -36,14 +36,18 @@ function ansible_vault#write()
     let l:buffer_plaintext = join(getline(1, '$'), "\n")
     let l:disk_plaintext = system('ansible-vault view ' . shellescape(l:fname) . ' 2>&1')
 
-    " Hash content
-    let l:disk_hash = sha256(substitute(l:disk_plaintext, '\n\+$', '', ''))
-    let l:buffer_hash = sha256(substitute(l:buffer_plaintext, '\n\+$', '', ''))
+    " Only skip the write if the disk content was read successfully and matches
+    if v:shell_error == 0
+        " ansible-vault view always appends a trailing newline; strip it before comparing
+        let l:disk_plaintext = substitute(l:disk_plaintext, '\n$', '', '')
+        let l:disk_hash   = sha256(l:disk_plaintext)
+        let l:buffer_hash = sha256(l:buffer_plaintext)
 
-    if l:disk_hash == l:buffer_hash
-        setlocal nomodified
-        echo "Content unchanged. Nothing was written to disk."
-        return
+        if l:disk_hash == l:buffer_hash
+            setlocal nomodified
+            echo "Content unchanged. Nothing was written to disk."
+            return
+        endif
     endif
 
     " Encrypt

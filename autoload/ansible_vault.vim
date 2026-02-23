@@ -15,13 +15,13 @@ function ansible_vault#read()
         return
     endif
 
-    let l:save_undo = &undolevels
-    set undolevels=-1
+    let l:save_undo = &l:undolevels
+    setlocal undolevels=-1
 
     silent %delete _
     call setline(1, split(l:plaintext, "\n"))
 
-    let &undolevels = l:save_undo
+    let &l:undolevels = l:save_undo
     setlocal ft=yaml.ansible nomodified
     redraw!
     echo "Vault decrypted."

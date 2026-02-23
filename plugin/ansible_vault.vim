@@ -1,6 +1,11 @@
 if exists('g:loaded_ansible_vault_auto') | finish | endif
 let g:loaded_ansible_vault_auto = 1
 
+if !executable('ansible-vault')
+    echoerr "ansible-vault not found in PATH"
+    finish
+endif
+
 " --- Configuration ---
 " Override this if you want to this plugin to handle different patterns, e.g.
 " let g:ansible_vault_pattern = 'secrets.yml,*_vault.yml'

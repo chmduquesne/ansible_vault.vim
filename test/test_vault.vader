@@ -73,6 +73,7 @@ Execute (Security options are set for vault files):
   Assert !&swapfile
   Assert !&backup
   Assert !&writebackup
+  Assert &viminfo ==# ''
 
   bwipeout!
 
